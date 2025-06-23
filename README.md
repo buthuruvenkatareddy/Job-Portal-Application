@@ -54,16 +54,3 @@ Buthuru Venkat Reddy
 📧 <buthuruvenkatreddy@gmail.com>
 
 
-JobPortalProject/
-│
-├── core/                   # Main Django app
-├── static/
-│   └── images/             # All image assets (hero, logo, seeker, employer)
-├── templates/              # HTML templates
-├── db.sqlite3              # Default DB
-├── manage.py
-└── README.md
-
-🙋‍♂️ Author
-Buthuru Venkat Reddy
-📧 <buthuruvenkatreddy@gmail.com>
