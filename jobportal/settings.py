@@ -1,11 +1,19 @@
+import os
 from pathlib import Path
 
+# Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'your-secret-key'
-DEBUG = True
-ALLOWED_HOSTS = []
+# Security Key (Use environment variable for production)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
+# Debug
+DEBUG = 'RENDER' not in os.environ  # False on Render, True locally
+
+# Allowed Hosts
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,8 +24,10 @@ INSTALLED_APPS = [
     'core',
 ]
 
+# Middleware (includes WhiteNoise for static files)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← added for Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -28,10 +38,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'jobportal.urls'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],  # Template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -46,6 +57,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'jobportal.wsgi.application'
 
+# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -53,6 +65,7 @@ DATABASES = {
     }
 }
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -60,14 +73,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# Static files configuration
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Where collectstatic dumps files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Login/Logout Redirects
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Auto Field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
