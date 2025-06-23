@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="jumbotron text-center bg-light p-4 rounded">
+    <img src="{% static 'images/hero.jpeg' %}" alt="Hero Banner" class="img-fluid mb-3 rounded shadow">
+    <h2 class="mb-3">Find Your Dream Job</h2>
+    <form method="GET" class="row g-2 justify-content-center mt-3">
+        <div class="col-md-3">
+            <input type="text" name="title" placeholder="Job Title" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="location" placeholder="Location" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="company" placeholder="Company" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+</div>
+
+<div class="row mt-4">
+    {% if jobs %}
+        {% for job in jobs %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm job-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ job.company }}</h6>
+                        <p class="card-text">{{ job.description|truncatechars:120 }}</p>
+                        <p class="text-muted small">📍 {{ job.location }} | 💸 {{ job.salary }}</p>
+                        <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">No jobs found.</p>
+    {% endif %}
+</div>
+{% endblock %}

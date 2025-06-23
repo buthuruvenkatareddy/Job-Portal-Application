@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <!-- Left Side Image -->
+        <div class="col-md-6 d-none d-md-flex justify-content-center">
+            <img src="{% static 'images/seeker.jpeg' %}" alt="Job Seeker" class="img-fluid rounded shadow" style="max-width: 80%; height: auto;">
+        </div>
+
+        <!-- Right Side Form -->
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4 border-0">
+                <h3 class="text-center mb-4">Create Account</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success w-100">Register</button>
+                </form>
+                <p class="text-center mt-3">Already have an account? <a href="/login/">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

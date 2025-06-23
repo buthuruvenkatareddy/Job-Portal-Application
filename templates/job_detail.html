@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card p-4">
+    <h2>{{ job.title }}</h2>
+    <p><strong>Company:</strong> {{ job.company }}</p>
+    <p><strong>Location:</strong> {{ job.location }}</p>
+    <p><strong>Salary:</strong> {{ job.salary }}</p>
+    <p><strong>Description:</strong><br>{{ job.description }}</p>
+    <a href="{% url 'apply_job' job.id %}" class="btn btn-success mt-2">Apply Now</a>
+</div>
+{% endblock %}
