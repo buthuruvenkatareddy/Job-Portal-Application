@@ -26,7 +26,7 @@ A full-featured job portal where employers can post jobs and job seekers can sea
 
 | Post Job (Employer)                      | Login Page                                 |
 |------------------------------------------|--------------------------------------------|
-| ![Post Job](static/images/employer.jpeg) | ![Login](static/images/login_preview.jpeg) |
+| ![Post Job](static/images/employer.jpeg) | ![Login](static/images/login_preview.png) |
 
 ---
 
