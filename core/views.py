@@ -1,20 +1,41 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Job
-from .forms import RegisterForm, JobApplyForm
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from .models import Job
+from .forms import RegisterForm, JobApplyForm, LoginForm  # Make sure LoginForm exists
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('job_list')
+            form.save()
+            return redirect('login')  # or your desired page
     else:
-        form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})  # make sure template name matches
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('job_list')
+            else:
+                return render(request, 'login.html', {'form': form, 'error': 'Invalid credentials'})
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form': form})
+
 
 def job_list(request):
     location = request.GET.get('location')
@@ -29,10 +50,12 @@ def job_list(request):
         jobs = jobs.filter(company__icontains=company)
     return render(request, 'job_list.html', {'jobs': jobs})
 
+
 @login_required
 def job_detail(request, id):
     job = get_object_or_404(Job, id=id)
     return render(request, 'job_detail.html', {'job': job})
+
 
 @login_required
 def apply_job(request, id):
@@ -48,6 +71,7 @@ def apply_job(request, id):
     else:
         form = JobApplyForm()
     return render(request, 'apply_job.html', {'form': form, 'job': job})
+
 
 @login_required
 def post_job(request):
