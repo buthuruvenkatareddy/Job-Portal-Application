@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Job
-from .forms import RegisterForm, JobApplyForm, LoginForm  # Make sure LoginForm exists
+from .forms import RegisterForm, ApplicationForm, LoginForm
+ # Make sure LoginForm exists
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
@@ -61,7 +62,7 @@ def job_detail(request, id):
 def apply_job(request, id):
     job = get_object_or_404(Job, id=id)
     if request.method == 'POST':
-        form = JobApplyForm(request.POST, request.FILES)
+        form = ApplicationForm(request.POST, request.FILES)
         if form.is_valid():
             app = form.save(commit=False)
             app.job = job
@@ -69,7 +70,7 @@ def apply_job(request, id):
             app.save()
             return redirect('job_list')
     else:
-        form = JobApplyForm()
+        form = ApplicationForm()
     return render(request, 'apply_job.html', {'form': form, 'job': job})
 
 
