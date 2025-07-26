@@ -4,11 +4,11 @@ from pathlib import Path
 # Base Directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security Key (Use environment variable for production)
+# Secret Key
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key')
 
-# Debug
-DEBUG = 'RENDER' not in os.environ  # False on Render, True locally
+# Debug Mode
+DEBUG = 'RENDER' not in os.environ
 
 # Allowed Hosts
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
@@ -24,10 +24,10 @@ INSTALLED_APPS = [
     'core',
 ]
 
-# Middleware (includes WhiteNoise for static files)
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← added for Render
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -36,13 +36,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Root URL
 ROOT_URLCONF = 'jobportal.urls'
 
 # Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Template directory
+        'DIRS': [BASE_DIR / 'templates'],  # Custom templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -55,9 +56,10 @@ TEMPLATES = [
     },
 ]
 
+# WSGI
 WSGI_APPLICATION = 'jobportal.wsgi.application'
 
-# Database
+# Database (SQLite for dev)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -65,7 +67,7 @@ DATABASES = {
     }
 }
 
-# Password validation
+# Password Validators
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -73,21 +75,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# Language & Timezone
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files configuration
+# Static Files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Where collectstatic dumps files
+STATICFILES_DIRS = [BASE_DIR / 'static']  # For development
+STATIC_ROOT = BASE_DIR / 'staticfiles'    # For production (Render)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Login/Logout Redirects
+# Media Files (Optional - if you're using user-uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Redirects
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-# Auto Field
+# Default Auto Field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

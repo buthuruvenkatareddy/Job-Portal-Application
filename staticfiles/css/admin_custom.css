@@ -1,0 +1,32 @@
+/* Light background for the whole page */
+body, .dashboard, .module, .module caption, .grp-module {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Header Bar */
+#header {
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#branding h1, #branding h1 a {
+    color: #000000 !important;
+}
+
+/* Sidebar Menu */
+#user-tools, .module h2 {
+    color: #343a40 !important;
+}
+
+/* Buttons and links */
+.button, input[type=submit], a.button {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Tables */
+table {
+    background-color: #ffffff !important;
+    color: #000000;
+}
