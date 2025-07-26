@@ -6,9 +6,11 @@ services:
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate
-    startCommand: gunicorn jobportal.wsgi
+    startCommand: gunicorn jobportal.wsgi:application --bind 0.0.0.0:8000
     envVars:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: PYTHON_VERSION
         value: 3.10
+      - key: DJANGO_SETTINGS_MODULE
+        value: jobportal.settings  # 👈 Add this to be safe

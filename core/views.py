@@ -5,19 +5,17 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
-# Register
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/')
+            return redirect('job_list')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
-# Job List with Filter
 def job_list(request):
     location = request.GET.get('location')
     title = request.GET.get('title')
@@ -31,7 +29,6 @@ def job_list(request):
         jobs = jobs.filter(company__icontains=company)
     return render(request, 'job_list.html', {'jobs': jobs})
 
-# Job Detail + Apply
 @login_required
 def job_detail(request, id):
     job = get_object_or_404(Job, id=id)
@@ -47,23 +44,29 @@ def apply_job(request, id):
             app.job = job
             app.applicant = request.user
             app.save()
-            return redirect('/')
+            return redirect('job_list')
     else:
         form = JobApplyForm()
     return render(request, 'apply_job.html', {'form': form, 'job': job})
 
 @login_required
 def post_job(request):
-    if request.user.profile.role != 'employer':
+    if not hasattr(request.user, 'profile') or request.user.profile.role != 'employer':
         return HttpResponse("Unauthorized", status=401)
+
     if request.method == 'POST':
-        title = request.POST['title']
-        desc = request.POST['description']
-        company = request.POST['company']
-        salary = request.POST['salary']
-        location = request.POST['location']
+        title = request.POST.get('title')
+        desc = request.POST.get('description')
+        company = request.POST.get('company')
+        salary = request.POST.get('salary')
+        location = request.POST.get('location')
         Job.objects.create(
-            title=title, description=desc, company=company,
-            salary=salary, location=location, posted_by=request.user)
-        return redirect('/')
+            title=title,
+            description=desc,
+            company=company,
+            salary=salary,
+            location=location,
+            posted_by=request.user
+        )
+        return redirect('job_list')
     return render(request, 'post_job.html')
